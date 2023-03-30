@@ -1,116 +1,80 @@
-import { useState, useEffect } from "react";
-import {
-  fetchTrendingTVs,
-  fetchTrendingMovies,
-  fetchTVsPopular,
-  fetchMoviesPopular,
-  fetchTopratedTv,
-  fetchTopratedMovie,
-  fetchTvsNowPlaying,
-  fetchMoviesNowPlaying,
-} from "../../API";
-import "./listItems.scss";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
-import { Item } from "../Item";
-export const ListItems = ({ type, title }) => {
-  const [data, setData] = useState([]);
+import Filter from "../../Components/Filter"
+import React, { useState, useEffect } from 'react'
+import { List, Space, Card, Button } from 'antd';
+import { GoLocation } from "react-icons/go";
+import { FcCalendar } from "react-icons/fc";
+import { getEvent } from "../../service/api";
+import { useNavigate } from "react-router-dom";
 
-  const [slider, setSlider] = useState(null);
+let initFilter =
+{
+  name: '',
+  address: '',
+  category: [],
+  date: [
+  ]
+};
 
-  const next = () => {
-    slider.slickNext();
-  };
-  const previous = () => {
-    slider.slickPrev();
-  };
-  var settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    initialSlide: 0,
-    arrows: false,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 800,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
+
+export default function ListItem() {
+
+  const [data, setData] = useState();
+  const [loading, setLoading] = useState();
+  const [filter, setFilter] = useState(initFilter)
+  const navigate = useNavigate();
+
+  const onFilter = (f) => {
+    console.log('onFilter: ', f)
+    setFilter({ ...filter, ...f })
+  }
 
   useEffect(() => {
-    if (type === "movies-trending") {
-      const fetchAPI = async () => {
-        setData(await fetchMoviesNowPlaying());
-      };
-      fetchAPI();
-    } else if (type === "tvs-trending") {
-      const fetchAPI = async () => {
-        setData(await fetchTvsNowPlaying());
-      };
-      fetchAPI();
-    } else if (type === "tvs-popular") {
-      const fetchAPI = async () => {
-        setData(await fetchTVsPopular());
-      };
-      fetchAPI();
-    } else if (type === "movies-popular") {
-      const fetchAPI = async () => {
-        setData(await fetchMoviesPopular());
-      };
-      fetchAPI();
-    } else if (type === "tvs-rated") {
-      const fetchAPI = async () => {
-        setData(await fetchTopratedTv());
-      };
-      fetchAPI();
-    } else if (type === "movies-rated") {
-      const fetchAPI = async () => {
-        setData(await fetchTopratedMovie());
-      };
-      fetchAPI();
-    }
-  }, []);
+    console.log("Filter : ", filter)
+    getEvent(filter, setData, setLoading)
+  }, [filter])
+
+  const detailItem = (id) => {
+      navigate({
+        pathname: `/event/detail/${id}`,
+    });
+  }
+
+
   return (
-    <div className="row">
-      <div className="list-title">{title}</div>
-      <div className="list-items">
-        <Slider ref={(e) => setSlider(e)} {...settings}>
-          {data?.slice(0, 20).map((e) => (
-            <div key={e.id}>
-              <Item data={e} />
-            </div>
-          ))}
-        </Slider>
-        <div className="arrows" style={{ textAlign: "center" }}>
-          <button className="button-pre" onClick={previous}>
-            <i className="fa-solid fa-chevron-left"></i>
-          </button>
-          <button className="button-next" onClick={next}>
-            <i className="fa-solid fa-chevron-right"></i>
-          </button>
-        </div>
-      </div>
+    <div className="home-page">
+      <Filter filter={filter} onFilter={onFilter} />
+      <List
+        style={{ marginTop: '50px' }}
+        itemLayout="vertical"
+        size="large"
+        loading={loading}
+        grid={{ gutter: 12, column: 3 }}
+        pagination={{
+          onChange: (page) => {
+            console.log(page);
+          },
+          align: 'center',
+          pageSize: 12,
+        }}
+        dataSource={data}
+        renderItem={(item) => (
+          <List.Item >
+            <Card   hoverable >
+              <div>
+                <img style={{ height: '200px', width: '100%' }} src={item.img} alt="" />
+                <h5>{item.name}</h5>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <p><GoLocation />  {item.address}</p>
+                  <p><FcCalendar /> : {item.day}</p>
+                </div>
+                <Button  onClick={() => detailItem(item.id)}  block>
+                  Xem Ngay
+                </Button>
+              </div>
+            </Card>
+          </List.Item>
+        )}
+      />
     </div>
   );
 };

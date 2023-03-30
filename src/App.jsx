@@ -1,21 +1,15 @@
 import React, { useEffect } from "react";
 
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, redirect, RouterProvider } from "react-router-dom";
 import { Register } from "./Pages/Register";
 import "../src/assets/css/plugins.css"
 import "../src/assets/css/style.css"
 import { Login } from "./Pages/Login";
 import { Home } from "./Pages/Home";
 import { useSelector } from "react-redux";
-import { Genres } from "./Pages/Genres";
-import { MoviesPage } from "./Pages/MoviesPage";
-import { TVsPage } from "./Pages/TVsPage";
-import { SearchPage } from "./Pages/SearchPage";
 import { Footer } from "./Components/Footer";
 import OAuth2RedirectHandler from './Components/oauth2/OAuth2RedirectHandler';
-import { FavoritePage } from "./Pages/FavoritePage";
-import { WatchPage } from "./Pages/WatchPage";
 import Profile from "./Pages/Profile";
 import AdminContainer from "./admin/Container/AdminContainer";
 import { Button, Result } from 'antd';
@@ -23,9 +17,13 @@ import UserContainer from "./admin/Container/UserContainer";
 import CategoryContainer from "./admin/Container/CategoryContainer";
 import EventContainer from "./admin/Container/EventContainer";
 import EventSaveContainer from "./admin/Container/EventSaveContainer";
+import { Detail } from "./Pages/Detail";
+import { Ticket } from "./Pages/BuyTicket";
+import InvoiceContainer from "./admin/Container/InvoiceContainer";
 
 function App() {
-  const user = useSelector((state) => state.app.user);
+  const user = useSelector((state) => state.profile.user);
+  const isLogin = useSelector((state) => state.profile.isLogin)
 
   console.log("User :" , user)
   let roleAdmin = false;
@@ -80,6 +78,15 @@ function App() {
       />)
     },
     {
+      path: "/admin/invoice",
+      element: roleAdmin == true ?  ( <InvoiceContainer/>) : (<Result
+        status="403"
+        title="403"
+        subTitle="Forbiden"
+        extra={<Button type="primary">Back Home</Button>}
+      />)
+    },
+    {
       path: "/admin/event/save",
       element: roleAdmin == true ?  ( <EventSaveContainer/>) : (<Result
         status="403"
@@ -105,35 +112,13 @@ function App() {
       element: <Home />,
     },
     {
-      path: "/",
-      element: <Footer />,
-      children: [
-        {
-          path: "/genres/:type/:id",
-          element: <Genres />,
-        },
-        {
-          path: "/search/:input",
-          element: <SearchPage />,
-        },
-        {
-          path: "/tv",
-          element: <TVsPage />,
-        },
-        {
-          path: "/movies",
-          element: <MoviesPage />,
-        },
-        {
-          path: "/favorite",
-          element: <FavoritePage />,
-        },
-        {
-          path: "/watch",
-          element: <WatchPage />,
-        },
-      ],
+      path: "/event/detail/:id",
+      element: <Detail />,
     },
+    {
+      path: "/event/ticket/:id",
+      element:  <Ticket/> 
+    }
   ]);
   return (
     <div className="App">

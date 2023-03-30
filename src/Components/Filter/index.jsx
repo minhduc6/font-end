@@ -7,6 +7,8 @@ import { Select } from 'antd';
 import { DatePicker, Space } from 'antd';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { Input } from 'antd';
+import { httpClient } from "../../service/httpClient";
+
 
 
 export default function Filter({ filter, onFilter }) {
@@ -15,8 +17,10 @@ export default function Filter({ filter, onFilter }) {
     const [search, setSearch] = useState(filter?.name || '')
     const searchDebouce = useDebounce(search, 800)
     const handleSearch = (searchNow = true) => onFilter({ name: searchNow ? search : searchDebouce })
-    const { transcript, resetTranscript } = useSpeechRecognition();
+    const { transcript, resetTranscript  } = useSpeechRecognition();
     const [isListening, setIsListening] = useState(false);
+    const [option,setOption] = useState([]);
+    
 
 
     useUpdateEffect(() => {
@@ -24,19 +28,40 @@ export default function Filter({ filter, onFilter }) {
         handleSearch(false)
     }, [searchDebouce])
 
+
+
     useEffect(() => {
         setSearch(transcript)
     }, [transcript]);
 
 
-    const options = [];
+    useEffect(() => {
+        if(search === '') {
+            resetTranscript()
+        }
+    }, [search]);
 
-    for (let i = 10; i < 36; i++) {
-        options.push({
-            value: i.toString(36) + i,
-            label: i.toString(36) + i,
+  
+    useEffect(() => {
+        httpClient
+        .get("/api/admin/category", {
+        }).then((response) => {
+            const temp = []
+            console.log(response.data)
+            for (let i = 0; i < response?.data?.length; i++) {
+                temp.push({
+                    value: response.data[i].id,
+                    label: response.data[i].name,
+                });
+                setOption(temp)
+            }
+        }).catch(err => {
+            console.log(err)
+        }).finally(() => {
+            console.log("done")
         });
-    }
+    }, []);
+
 
     const handleListing = () => {
         setIsListening(true);
@@ -89,15 +114,14 @@ export default function Filter({ filter, onFilter }) {
                 <div className='row'>
                     <div className='col-12 col-md-4'>
                         <Select
-                            defaultValue="lucy"
+                            defaultValue=""
                             size='large'
                             style={{ minWidth: '300px' }}
                             onChange={(value) => onFilter({ address: value === '' ? '' : value })}
                             options={[
-                                { value: 'jack', label: 'Jack' },
-                                { value: 'lucy', label: 'Lucy' },
-                                { value: 'Yiminghe', label: 'yiminghe' },
-                                { value: 'disabled', label: 'Disabled', disabled: true },
+                                { value: 'Hà Nội', label: 'Hà Nội' },
+                                { value: 'Thành Phố Hồ Chí Minh', label: 'Thành Phố Hồ Chí Minh' },
+                                { value: '', label: 'Tất Cả Địa Điểm' },
                             ]}
                         />
                     </div>
@@ -109,7 +133,7 @@ export default function Filter({ filter, onFilter }) {
                             placeholder="Please select"
                             onChange={(value) => onFilter({ category: value === '' ? '' : value })}
                             style={{ width: '100%' }}
-                            options={options}
+                            options={option}
                         />
                     </div>
                     <div className='col-12 col-md-4'>

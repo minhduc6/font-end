@@ -1,5 +1,5 @@
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { EditOutlined, DeleteOutlined ,InfoCircleOutlined } from '@ant-design/icons';
+import { Button ,Tag } from 'antd';
 import { Avatar } from 'antd';
 
 export const createUserColumns = (searchText, onClickEdit, showDeleteConfirm) => {
@@ -72,6 +72,98 @@ export const createCategoryColumns = (searchText, onClickEdit, showDeleteConfirm
 }
 
 
+export const createInvoiceColumns = (onCickDetail) => {
+    // TODO
+    return {
+        id: {
+            title: 'Id',
+            dataIndex: 'id',
+        },
+        name: {
+            title: 'Name',
+            dataIndex: 'nameRecv',
+        },
+        phone : {
+            title: 'Phone',
+            dataIndex: 'phoneRecv',
+        },
+        address: {
+            title: 'Address',
+            dataIndex: 'addressRecv',
+        },
+        amount: {
+            title: 'Amount',
+            dataIndex: 'amount',
+        },
+        time: {
+            title: 'Times',
+            dataIndex: 'times',
+        },
+        status: {
+            title: 'Status',
+            dataIndex: '',
+            render: (rowdata) => <>
+                <Tag  color={rowdata.status == 1 ? 'green' : 'red'} >
+                    {rowdata.status == 1 ? 'DONE' : 'PROCESSING'}
+                </Tag>
+            </>
+        },
+        action: {
+            title: 'Action',
+            dataIndex: '',
+            render: (rowdata) => <>
+                <Button type="ghost" onClick={() => onCickDetail(rowdata)}  icon={<InfoCircleOutlined />} size='middle' />
+            </>
+        },
+
+    }
+}
+
+
+export const createEventColumns = (searchText, onClickEdit, showDeleteConfirm) => {
+    // TODO
+    return {
+        id: {
+            title: 'Id',
+            dataIndex: 'id',
+        }
+        ,
+        name: {
+            title: 'Name',
+            dataIndex: 'name',
+            filteredValue: [searchText],
+            onFilter: (value, record) => {
+                return String(record?.name).toLowerCase()?.includes(value?.toLowerCase());
+            }
+        },
+        image: {
+            title: 'Image',
+            dataIndex: '',
+            render: (rowdata) => <>
+                <Avatar size={64} src={rowdata.img} />
+            </>
+        },
+        status: {
+            title: 'Status',
+            dataIndex: '',
+            render: (rowdata) => <>
+                <Tag color={rowdata.status == 1 ? 'green' : 'red'} >
+                    {rowdata.status == 1 ? 'MỞ BÁN' : 'ĐÓNG'}
+                </Tag>
+            </>
+        },
+        action: {
+            title: 'Action',
+            dataIndex: '',
+            render: (rowdata) => <>
+                <Button type="ghost" onClick={() => onClickEdit(rowdata)} icon={<EditOutlined />} size='middle' />
+                <Button type="ghost" onClick={() => showDeleteConfirm(rowdata)} style={{ color: 'red' }} icon={<DeleteOutlined />} size='middle' />
+            </>
+        },
+    }
+}
+
+
 export const createTypeTicket = (onClickEdit, showDeleteConfirm) => {
     // TODO
     return {
@@ -88,11 +180,11 @@ export const createTypeTicket = (onClickEdit, showDeleteConfirm) => {
             title: 'Description',
             dataIndex: 'description',
         },
-        price : {
+        price: {
             title: 'Price',
             dataIndex: 'price',
         },
-        quantity : {
+        quantity: {
             title: 'Quantity',
             dataIndex: 'quantity',
         },

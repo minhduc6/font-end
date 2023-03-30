@@ -7,6 +7,7 @@ import { Select } from 'antd';
 import { Divider, Table } from 'antd';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { Button } from 'antd';
+import { useNavigate } from "react-router-dom";
 import * as Yup from 'yup';
 import { createTypeTicket } from '../Helper/constants';
 import { TypeTicketModal } from './Modal/TypetiketModal';
@@ -18,10 +19,12 @@ const { Title } = Typography;
 
 
 const EventSave = () => {
+    const navigate = useNavigate();
     const [dataTable, setDataTable] = useState()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [statusAction, setStatusAction] = useState(-1)
     const [valueCategory, setValueCategory] = useState();
+    const [valueStatus, setValueStatus] = useState();
     const [item123, setItem123] = useState({})
     const [value, setValue] = useState('');
     const ref = useRef(null);
@@ -61,6 +64,7 @@ const EventSave = () => {
                         const element = response.data.categoryList[index];
                         temp.push(element?.id)
                     }
+                    setValueStatus(response.data.status)
                     setValueCategory(temp);
                     setDataTable(response.data.typeTickets)
                     console.log("Response : ", response)
@@ -97,66 +101,76 @@ const EventSave = () => {
 
     const someFuncton = () => {
         console.log("id", id)
-        if (id == false) {
-            const dataRequest = {
-                address: ref.current.values.address,
-                description: value,
-                listCategory: valueCategory,
-                name: ref.current.values.name,
-                status: 1,
-                ticketList: dataTable,
-                day: ref.current.values.day,
-                time: ref.current.values.time
-            }
-            const formData = new FormData();
-            formData.append("file", image)
-            formData.append("event", JSON.stringify(dataRequest))
-            httpClient
-                .post(`/api/admin/event`, formData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        }
-                    }
-                )
-                .then((response) => {
-                    message.success('Edit Success')
-                    console.log("Res", response)
-                })
-                .catch(() =>
-                    alert("CC !")
-                );
-            console.log("Data request khong co id :", dataRequest)
+        if (valueCategory == null) {
+            message.error("Không để trống Category")
         } else {
-            const dataRequest = {
-                address: ref.current.values.address,
-                description: value,
-                listCategory: valueCategory,
-                name: ref.current.values.name,
-                status: 1,
-                ticketList: dataTable,
-                day: ref.current.values.day,
-                time: ref.current.values.time
-            }
-            const formData = new FormData();
-            formData.append("file", image)
-            formData.append("event", JSON.stringify(dataRequest))
-            httpClient
-                .put(`/api/admin/event/${id}`, formData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
+            if (id == false) {
+                const dataRequest = {
+                    address: ref.current.values.address,
+                    description: value,
+                    listCategory: valueCategory,
+                    name: ref.current.values.name,
+                    status: valueStatus,
+                    ticketList: dataTable,
+                    day: ref.current.values.day,
+                    time: ref.current.values.time
+                }
+                const formData = new FormData();
+                formData.append("file", image)
+                formData.append("event", JSON.stringify(dataRequest))
+                httpClient
+                    .post(`/api/admin/event`, formData,
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                            }
                         }
-                    }
-                )
-                .then((response) => {
-                    message.success('Edit Success')
-                    console.log("Res", response)
-                })
-                .catch(() =>
-                    alert("CC !")
-                );
-            console.log("Data request khong co id :", dataRequest)
+                    )
+                    .then((response) => {
+                        message.success('Edit Success')
+                        console.log("Res", response)
+                        navigate({
+                            pathname: '/admin/event',
+                        });
+                    })
+                    .catch(() =>
+                        alert("CC !")
+                    );
+                console.log("Data request khong co id :", dataRequest)
+            } else {
+                const dataRequest = {
+                    address: ref.current.values.address,
+                    description: value,
+                    listCategory: valueCategory,
+                    name: ref.current.values.name,
+                    status: valueStatus,
+                    ticketList: dataTable,
+                    day: ref.current.values.day,
+                    time: ref.current.values.time
+                }
+                const formData = new FormData();
+                formData.append("file", image)
+                formData.append("event", JSON.stringify(dataRequest))
+                httpClient
+                    .put(`/api/admin/event/${id}`, formData,
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                            }
+                        }
+                    )
+                    .then((response) => {
+                        message.success('Edit Success')
+                        console.log("Res", response)
+                        navigate({
+                            pathname: '/admin/event',
+                        });
+                    })
+                    .catch(() =>
+                        alert("CC !")
+                    );
+                console.log("Data request khong co id :", dataRequest)
+            }
         }
     }
 
@@ -253,6 +267,21 @@ const EventSave = () => {
                                                 />
                                             </div>
                                         </div>
+                                        <div className="form-row">
+                                            <div className="form-group col-12">
+                                                <label>Status : </label>
+                                                <Select
+                                                    defaultValue={1}
+                                                    style={{ width: 120 }}
+                                                    value={valueStatus}
+                                                    onChange={(e) => setValueStatus(e)}
+                                                    options={[
+                                                        { value: 0, label: 'Đóng' },
+                                                        { value: 1, label: 'Mở Bán' },
+                                                    ]}
+                                                />
+                                            </div>
+                                        </div>
                                         <div style={{ marginTop: '10px' }} className="form-group col" >
                                             <label style={{ display: 'block' }}>Upload</label>
                                             <label style={{
@@ -264,6 +293,7 @@ const EventSave = () => {
                                                 <input ref={refFile} onChange={handleFileSelected} type="file" accept="image/*" />
                                             </label>
                                         </div>
+
                                         <Button style={{ marginTop: '10px' }} onClick={someFuncton} >Save</Button>
                                     </Form>
                                 );

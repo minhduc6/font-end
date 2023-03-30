@@ -1,115 +1,113 @@
 import { useEffect, useState } from "react";
+import { Image, message } from 'antd';
+import { Avatar } from 'antd';
 import "./item.scss";
-import ReactPlayer from "react-player/lazy";
-import { fetchMovieVideos, fetchTvVideos } from "../../API";
+import { Collapse } from 'antd';
+import {useParams} from "react-router-dom";
 import { httpClient } from '../../service/httpClient'
-import { useSelector } from "react-redux";
 
-import ScrollDialog from "../Dialog";
-export const Item = ({ data }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [videoTvData, setVideoTvData] = useState([]);
-  const [videoMovieData, setVideoMovieData] = useState([]);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const sessionId = useSelector((state) => state.app.session_id);
-  const [accountStates, setAccountStates] = useState([]);
-  const [loading, setLoading] = useState(false);
+const { Panel } = Collapse;
 
-  const GetAccountStates = () => {
-    if (data.type === "tv") {
-      httpClient
-        .get(`/tv/${data.id}/account_states`, {
-          params: {
-            session_id: sessionId,
-          },
-        })
-        .then((response) => setAccountStates(response.data));
-    }
 
-    if (data.type === "movie") {
-      httpClient
-        .get(`/movie/${data.id}/account_states`, {
-          params: {
-            session_id: sessionId,
-          },
-        })
-        .then((response) => setAccountStates(response.data));
-    }
-  };
+export const Item = () => {
+     
+  const {id} = useParams()
+  const [item,setItem] = useState();
+
+  console.log("Date :", id)
 
   useEffect(() => {
-    if (data.type === "movie") {
-      const fetchAPIMovie = async () => {
-        setVideoMovieData(await fetchMovieVideos(data.id));
-      };
-
-      fetchAPIMovie();
-    } else {
-      const fetchAPITv = async () => {
-        setVideoTvData(await fetchTvVideos(data.id));
-      };
-      fetchAPITv();
+    httpClient
+    .get(`/api/event/${id}`, {
+    })
+    .then((response) =>{
+        console.log(response)
+        setItem(response.data)
     }
-    sessionId && GetAccountStates();
-  }, [isHovered, loading]);
+    );
+  }, [])
+
+
+  const onClickBuyNow = () => {
+     if(item?.typeTickets?.length == 0 || item?.typeTickets == null) {
+         message.warning("Vé Chưa Được Phát Hành")
+     }
+  }
+
 
   return (
-    <div
-      className="listItem"
-      onMouseEnter={() => {
-        setIsHovered(true);
-        setIsPlaying(true);
-      }}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        setIsPlaying(false);
-      }}
-    >
-      <div className="card">
-        {<img className="card-img" src={data.backPoster || ""} alt="" />}
-        <p>{data.title}</p>
-      </div>
-      {isHovered && (
-        <div className="trailer">
-          {videoTvData?.key || videoMovieData?.key ? (
-            <ReactPlayer
-              loop={true}
-              playing={isPlaying}
-              width="100%"
-              height="100%"
-              url={`https://www.youtube.com/watch?v=${
-                videoTvData?.key || videoMovieData?.key
-              }`}
-              muted={true}
-              controls={true}
-              config={{
-                youtube: { playerVars: { origin: "https://www.youtube.com" } },
-              }}
-            />
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "100%",
-                height: "8rem",
-              }}
-            >
-              No data
+    <>
+      <section style={{ marginTop: '20px' }} class="wrapper bg-light">
+        <div class="container pt-10 pb-9 pt-md-14 pb-md-11 text-center">
+          <div class="row">
+            <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+              <div class="post-header">
+                <h1 class="display-1 mb-3">{item?.name}</h1>
+              </div>
             </div>
-          )}
-
-          <ScrollDialog
-            loading={loading}
-            setLoading={setLoading}
-            accountStates={accountStates}
-            data={data}
-            videoMovieData={videoMovieData}
-            videoTvData={videoTvData}
-          />
+          </div>
         </div>
-      )}
-    </div>
+      </section>
+      <section class="wrapper bg-light wrapper-border">
+        <div class="container pb-14 pb-md-16">
+          <article>
+              <div data-margin="5" >
+                <Image
+                  width= '100%'
+                  height='650px'
+                  src={item?.img}
+                />
+              </div>
+            <div class="row">
+              <div class="col-lg-10 offset-lg-1">
+                <h2 class="display-6 mb-4">Thông Tin Về Sự Kiện</h2>
+                <div class="row gx-0">
+                  <div class="col-md-12 text-justify">
+                    <div dangerouslySetInnerHTML={{ __html: item?.description }} />
+                    <div class="col-md-12">
+                    <ul style={{display : 'flex'}} class="list-unstyled">
+                      <li >
+                        <h5 class="mb-1">Date</h5>
+                        <p>{item?.day}</p>
+                       
+                      </li>
+                      <li style={{marginLeft : '100px'}}>
+                        <h5 class="mb-1">Time</h5>
+                        <p>{item?.time}</p>
+                      
+                      </li>
+                    </ul>
+                    <a href="#" onClick={onClickBuyNow} class="more hover">Bye Now</a>
+                  </div>
+                    <h2 class="display-6 mb-4">Thông Tin Về Vé</h2>
+                    <Collapse>
+                      {
+                        item?.typeTickets.map((data) => <Panel header={data.name} key={data.id}>
+                          <p>{data.description}</p>
+                        </Panel>)
+                      }
+                    </Collapse>
+                    <h2 class="display-6 mb-4 mt-4">Thông Tin Về Nhà Tổ Chức</h2>
+                    <div class="row gx-0">
+                      <div class="col-md-3">
+                        <Avatar
+                          size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
+                          src={item?.organizers?.image}
+                        />
+                      </div>
+                      <div class="col-md-9 text-justify">
+                           <h3></h3>
+                           <p>Email : {item?.organizers?.email} </p>
+                           <p>Sdt : {item?.organizers?.sdt}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </>
   );
 };

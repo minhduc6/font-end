@@ -2,7 +2,7 @@
 import { useState,useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { httpClient } from '../../service/httpClient'
-import { setCurrentUser } from "../../Store/index";
+import { setCurrentUser, setIsLoggin } from "../../Store/index";
 
 
 export default function Profile() {
@@ -10,7 +10,6 @@ export default function Profile() {
 
     const [user, setUser] = useState({});
     const dispatch = useDispatch();
-    console.log("123456")
 
 
     const getAccount = () => {
@@ -19,6 +18,7 @@ export default function Profile() {
             })
             .then((response) =>{
                 setUser(response.data)
+                dispatch(setIsLoggin(true))
                 dispatch(setCurrentUser(response.data))
             }
             );

@@ -1,21 +1,66 @@
 import "./navbar.scss";
 
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setCurrentUser, setIsLoggin } from "../../Store/index";
+
+import { Button, Dropdown, Avatar } from 'antd';
+
 
 function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const user = useSelector((state) => state.app.user);
-  window.onscroll = () => {
-    setIsScrolled(window.pageYOffset === 0 ? false : true);
-    return () => (window.onscroll = null);
-  };
+  const user = useSelector((state) => state.profile.user);
+  const isLoggin = useSelector((state) => state.profile.isLoggin)
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const logout = () => {
+    dispatch(setCurrentUser({}))
+    dispatch(setIsLoggin(false))
+    localStorage.removeItem("ACCESS_TOKEN")
+    navigate("/")
+  }
+
+  const loggin = () => {
+    navigate("/login")
+  }
+
+
+  const items = [
+    {
+      key: '1',
+      label: (
+        <a target="_blank" rel="noopener noreferrer" href="/profile">
+          Profile
+        </a>
+      ),
+    },
+    {
+      key: '2',
+      label: (
+        <a target="_blank" rel="noopener noreferrer" href="#">
+          Xem Đơn Hàng
+        </a>
+      ),
+    },
+    {
+      key: '3',
+      label: (
+        <a  target="_blank" rel="noopener noreferrer" onClick={logout}>
+          Đăng Xuất
+        </a>
+      ),
+    },
+  ];
+
+
 
   return (
     <>
       <nav class="navbar navbar-expand-lg center-nav navbar-light navbar-bg-light">
-        <div class="container flex-lg-row flex-nowrap align-items-center">
-          <div class="navbar-brand w-100">
+        <div class="container flex-nowrap align-items-center">
+          <div class="navbar-brand ">
             <ul class="navbar-nav">
               <li class="nav-item ">
 
@@ -34,22 +79,12 @@ function Navbar() {
               </li>
             </ul>
           </div>
-          <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">
-            <div class="navbar-other w-100 d-flex ms-auto">
-              <ul class="navbar-nav flex-row align-items-center ms-auto">
-                <li class="nav-item"><a class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-search"><i class="uil uil-search"></i></a></li>
-                <li class="nav-item">
-                  <a class="nav-link position-relative d-flex flex-row align-items-center" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-cart">
-                    <i class="uil uil-shopping-cart"></i>
-                    <span class="badge badge-cart bg-primary">3</span>
-                  </a>
-                </li>
-                <li class="nav-item d-lg-none">
-                  <button class="hamburger offcanvas-nav-btn"><span></span></button>
-                </li>
-              </ul>
-            </div>
-          </div>
+          {isLoggin == true ? (<Dropdown menu={{ items }} placement="bottomLeft">
+            <Avatar src={<img src={user.imgUrl} alt="avatar" />} />
+          </Dropdown>) : (<>  <Button onClick={loggin} >
+            Đăng Nhập
+          </Button></>)}
+
         </div>
       </nav>
     </>

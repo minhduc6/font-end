@@ -1,10 +1,11 @@
 import { TagsOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-
+import { Button, Dropdown, Avatar } from 'antd';
 import { Layout, Menu, theme } from 'antd';
 import * as React from 'react';
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-
+import { setCurrentUser, setIsLoggin } from "../../Store/index";
 
 const { Header, Content, Sider } = Layout;
 
@@ -45,6 +46,11 @@ const items2 = [
     icon: React.createElement(TagsOutlined),
     label: `Event`,
   },
+  {
+    key: `invoice`,
+    icon: React.createElement(TagsOutlined),
+    label: `Invoice`,
+  }
 ]
 
 
@@ -52,11 +58,39 @@ const items2 = [
 
 
 export default function AdminLayout({ children }) {
-  let navigate = useNavigate();
+  const user = useSelector((state) => state.profile.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const logout = () => {
+    dispatch(setCurrentUser({}))
+    dispatch(setIsLoggin(false))
+    localStorage.removeItem("ACCESS_TOKEN")
+    navigate("/")
+  }
+
+  const items = [
+    {
+      key: '1',
+      label: (
+        <a target="_blank" rel="noopener noreferrer" href="/profile">
+          Profile
+        </a>
+      ),
+    },
+    {
+      key: '3',
+      label: (
+        <a target="_blank" rel="noopener noreferrer" onClick={logout}>
+          Đăng Xuất
+        </a>
+      ),
+    },
+  ];
 
   const onClick = (e) => {
     console.log('click ', e);
-    navigate("/admin/"+e.key);
+    navigate("/admin/" + e.key);
   };
 
   const {
@@ -65,10 +99,13 @@ export default function AdminLayout({ children }) {
 
   return (
     <Layout>
-      <Header className="header">
-        <div className="logo" />
-        <Menu theme="dark"  mode="horizontal"   items={items1} />
+      <Header style={{ display: 'flex', justifyContent: 'space-between' }} className="header">
+        <Menu theme="dark" mode="horizontal" items={items1} />
+        <Dropdown menu={{ items }} placement="bottomLeft">
+          <Avatar style={{ marginTop: '15px' }} src={<img src={user.imgUrl} alt="avatar" />} />
+        </Dropdown>
       </Header>
+
       <Layout>
         <Sider width={200} style={{ background: colorBgContainer }}>
           <Menu
@@ -80,6 +117,7 @@ export default function AdminLayout({ children }) {
             items={items2}
           />
         </Sider>
+
         <Layout style={{ padding: '0 24px 24px' }}>
           <Content
             style={{

@@ -1,18 +1,13 @@
-
 import Navbar from "../../Components/Navbar";
-import ListItem from "../../Components/ListItems"
-import "./home.scss";
 import { Footer } from "../../Components/Footer";
+import { BuyTicket } from "../../Components/TypeTicket";
 
 
-
-
-
-export const Home = () => {
+export const Ticket = () => {
   return (
-    <div className="home-page">
+    <div>
       <Navbar />
-      <ListItem />
+      <BuyTicket/>
       <Footer/>
     </div>
   );

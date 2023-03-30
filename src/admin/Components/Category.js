@@ -2,9 +2,9 @@ import { Table, Input } from 'antd';
 import { useState, useEffect } from 'react';
 import { Typography } from 'antd';
 import { createCategoryColumns } from '../Helper/constants';
-import { getCategory, getUser } from '../Service/api';
-import { ExclamationCircleFilled ,PlusOutlined } from '@ant-design/icons';
-import { Modal , Button} from 'antd';
+import { getCategory } from '../Service/api';
+import { ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons';
+import { Modal, Button } from 'antd';
 import { DialogModalCategory } from './Modal/CategoryModel';
 import { httpClient } from '../../service/httpClient';
 import { message } from 'antd';
@@ -34,7 +34,7 @@ const Category = () => {
     }
 
 
-    
+
     const addCategory = () => {
         setValue(null)
         console.log("Item : ", value)
@@ -81,7 +81,9 @@ const Category = () => {
     return (
         <>
             <Title>Category Management</Title>
-            <Button type="ghost" onClick={addCategory} style={{color : 'red'}} icon={<PlusOutlined />} size='middle' />
+            <Button onClick={addCategory} style={{ marginBottom: '10px' }} type="primary" icon={<PlusOutlined />} size="middle">
+                Add
+            </Button>
             <Input.Search style={{ marginBottom: '10px' }} placeholder='Seach Here'
                 onSearch={(value) => {
                     setSearchText(value)

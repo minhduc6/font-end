@@ -1,0 +1,228 @@
+import { Avatar, List } from 'antd';
+import { useEffect, useRef, useState } from 'react';
+import { InputNumber } from 'antd';
+import * as Yup from 'yup';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Button, message, Steps, theme } from 'antd';
+
+
+
+const data = [
+  {
+    "id": 687,
+    "name": "Normal",
+    "description": "Normal",
+    "price": 100,
+    "quantity": 20,
+    "status": null
+  },
+  {
+    "id": 3192,
+    "name": "VIP",
+    "description": "VIP",
+    "price": 100000,
+    "quantity": 20,
+    "status": null
+  }
+]
+
+let dataTemp = data.map(obj => ({ ...obj, soLuong: 0 }))
+console.log("Data Temp :", dataTemp)
+
+
+
+
+export const BuyTicket = () => {
+  const [sum, setSum] = useState(0)
+  const [nameRcev,setNameRcev] = useState()
+  const [emailRcev,setEmailRcev] = useState()
+  const [sdtRcev,setSdtRcev] = useState()
+  const { token } = theme.useToken();
+  const [formValues, setFormValues] = useState(null);
+  const [current, setCurrent] = useState(0);
+  const ref = useRef()
+
+  const initialValues = {
+    nameRecv: '',
+    emailRecv: '',
+    sdtRecv: '',
+  };
+
+  const validationSchema = Yup.object().shape({
+    nameRecv: Yup.string()
+      .required('Name is required'),
+    sdtRecv: Yup.string()
+      .required('Phone is required'),
+    emailRecv: Yup.string()
+      .email('Email is invalid')
+      .required('Email is required'),
+  });
+
+  const steps = [
+    {
+      title: 'First',
+      content: (<div className='container'>
+        <List
+          style={{ marginTop: '100px' }}
+          itemLayout="horizontal"
+          dataSource={data}
+          renderItem={(item, index) => (
+            <List.Item >
+              <List.Item.Meta
+                title={<a href="https://ant.design">{item.name}</a>}
+                description={item.description}
+              />
+              <div>
+                <p>Price : {item.price}</p>
+                <InputNumber accept='number' value={dataTemp[index].soLuong} onChange={(event) => onChangeProductQuantity(index, event)} min={0} defaultValue={0} />
+              </div>
+            </List.Item>
+          )}
+        />
+        <h3>Tổng Tiền : {sum}</h3>
+      </div>),
+    },
+    {
+      title: 'Second',
+      content: (<Formik
+        innerRef={ref}
+        initialValues={formValues || initialValues} enableReinitialize validationSchema={validationSchema}
+        onSubmit={(values, actions) => {
+          setTimeout(() => {
+            alert(JSON.stringify(values, null, 2));
+            actions.setSubmitting(false);
+          }, 1000);
+        }}>
+        {({ errors, touched }) => {
+          return (
+            <Form>
+              <div style={{ marginTop: '100px' }} className="container">
+                <h1>Infomation</h1>
+                <div className="form-row">
+                  <div className="form-group col-6">
+                    <label>Name Recv</label>
+                    <Field name="nameRecv" type="text" className={'form-control' + (errors.nameRecv && touched.nameRecv ? ' is-invalid' : '')} />
+                    <ErrorMessage name="nameRecv" component="div" className="invalid-feedback" />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-6">
+                    <label>Email Recv</label>
+                    <Field name="emailRecv" type="text" className={'form-control' + (errors.emailRecv && touched.emailRecv ? ' is-invalid' : '')} />
+                    <ErrorMessage name="emailRecv" component="div" className="invalid-feedback" />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-6">
+                    <label>Phone Recv</label>
+                    <Field name="sdtRecv" type="text" className={'form-control' + (errors.sdtRecv && touched.sdtRecv ? ' is-invalid' : '')} />
+                    <ErrorMessage name="sdtRecv" component="div" className="invalid-feedback" />
+                  </div>
+                </div>
+              </div>
+            </Form>
+          );
+        }}
+      </Formik>),
+    },
+    {
+      title: 'Last',
+      content: 'Last-content',
+    },
+  ];
+  const next = () => {
+    if (sum == 0) {
+      message.error('Vui Lòng Chọn Vé Đi')
+    } else {
+      setCurrent(current + 1);
+    }
+
+  };
+  const prev = () => {
+    setCurrent(current - 1);
+  };
+  const items = steps.map((item) => ({
+    key: item.title,
+    title: item.title,
+  }));
+
+
+  const onChangeProductQuantity = (index, value) => {
+
+    console.log("Value : ", value)
+    console.log("Index : ", index)
+
+    dataTemp[index].soLuong = value;
+    let sum = 0
+    for (let index = 0; index < dataTemp.length; index++) {
+      const element = dataTemp[index];
+      sum += element.soLuong * element.price
+    }
+
+    setSum(sum)
+    console.log("Data : ", data)
+  };
+
+  const onSubmit = () => {
+    if (Object.keys(ref.current.errors).length !== 0) {
+      message.error("Vui lòng điền đủ thông tin")
+    } else if (ref.current.values.nameRecv === '') {
+      message.error("Vui lòng điền đủ thông tin")
+    } else {
+      setNameRcev(ref.current.values.nameRecv)
+      setEmailRcev(ref.current.values.emailRecv)
+      setSdtRcev(ref.current.values.sdtRecv)
+      message.success('Ok')
+      next()
+    }
+    console.log("REF", ref.current.errors)
+  }
+
+  const done = () => {
+    const result = dataTemp.filter(item => item.soLuong > 0);
+    console.log("Result : " ,result)
+    console.log("Amount : " ,sum)
+    console.log("Name : " ,nameRcev)
+    console.log("Email : " ,emailRcev)
+    console.log("sdt : " ,sdtRcev)
+  }
+
+
+
+  return (
+
+    <>
+      <Steps current={current} items={items} />
+      <div>{steps[current].content}</div>
+      <div
+        style={{
+          marginTop: 100,
+          marginLeft: 100
+        }}
+      >
+        {current < steps.length - 1 && current == 1 ? (
+          <Button type="primary" onClick={onSubmit}>
+            Next
+          </Button>
+        ) : (current < steps.length - 1) ? (<Button type="primary" onClick={() => next()}>
+          Next
+        </Button>) : ('')}
+        {current === steps.length - 1 && (
+          <Button onClick={done} type="primary">
+            Done
+          </Button>
+        )}
+        {current > 0 && (
+          <Button
+            style={{
+              margin: '0 8px',
+            }}
+            onClick={() => prev()}
+          >
+            Previous
+          </Button>
+        )}
+      </div>
+    </>
+  );
+};

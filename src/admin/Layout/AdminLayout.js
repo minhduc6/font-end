@@ -42,6 +42,11 @@ const items2 = [
     label: `Category`,
   },
   {
+    key: `organizers`,
+    icon: React.createElement(TagsOutlined),
+    label: `Organizers`,
+  },
+  {
     key: `event`,
     icon: React.createElement(TagsOutlined),
     label: `Event`,

@@ -20,6 +20,7 @@ import EventSaveContainer from "./admin/Container/EventSaveContainer";
 import { Detail } from "./Pages/Detail";
 import { Ticket } from "./Pages/BuyTicket";
 import InvoiceContainer from "./admin/Container/InvoiceContainer";
+import OrganizerContainer from "./admin/Container/OrganizerContainer";
 
 function App() {
   const user = useSelector((state) => state.profile.user);
@@ -62,6 +63,15 @@ function App() {
     {
       path: "/admin/category",
       element: roleAdmin == true ?  ( <CategoryContainer/>) : (<Result
+        status="403"
+        title="403"
+        subTitle="Forbiden"
+        extra={<Button type="primary">Back Home</Button>}
+      />)
+    },
+    {
+      path: "/admin/organizers",
+      element: roleAdmin == true ?  ( <OrganizerContainer/>) : (<Result
         status="403"
         title="403"
         subTitle="Forbiden"

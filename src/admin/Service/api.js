@@ -27,6 +27,19 @@ export const getCategory = (setData,setLoading) => {
         });
 };
 
+export const getOrganizer = (setData,setLoading) => {
+    httpClient
+        .get("/api/admin/organizers", {
+        }).then((response) => {
+             console.log(response)
+             setData(response.data)
+        }).catch(err => {
+            console.log(err)
+        }).finally(() => {
+            setLoading(false)
+        });
+};
+
 
 export const getEvent = (setData,setLoading) => {
     httpClient

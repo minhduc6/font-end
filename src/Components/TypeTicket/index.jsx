@@ -4,49 +4,46 @@ import { InputNumber } from 'antd';
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { Button, message, Steps, theme } from 'antd';
-
-
-
-const data = [
-  {
-    "id": 687,
-    "name": "Normal",
-    "description": "Normal",
-    "price": 100,
-    "quantity": 20,
-    "status": null
-  },
-  {
-    "id": 3192,
-    "name": "VIP",
-    "description": "VIP",
-    "price": 100000,
-    "quantity": 20,
-    "status": null
-  }
-]
-
-let dataTemp = data.map(obj => ({ ...obj, soLuong: 0 }))
-console.log("Data Temp :", dataTemp)
-
-
+import { useParams } from "react-router-dom";
+import { httpClient } from '../../../src/service/httpClient';
 
 
 export const BuyTicket = () => {
   const [sum, setSum] = useState(0)
-  const [nameRcev,setNameRcev] = useState()
-  const [emailRcev,setEmailRcev] = useState()
-  const [sdtRcev,setSdtRcev] = useState()
-  const { token } = theme.useToken();
+  const [nameRcev, setNameRcev] = useState()
+  const [emailRcev, setEmailRcev] = useState()
+  const [sdtRcev, setSdtRcev] = useState()
   const [formValues, setFormValues] = useState(null);
   const [current, setCurrent] = useState(0);
+  const [data, setData] = useState()
+  const { id } = useParams()
   const ref = useRef()
+  const [dataTemp, setDataTemp] = useState([])
 
   const initialValues = {
     nameRecv: '',
     emailRecv: '',
     sdtRecv: '',
   };
+
+
+  useEffect(() => {
+    httpClient
+      .get(`/api/type-ticket/${id}`, {
+      }).then((response) => {
+        setData(response.data)
+        setDataTemp(response?.data?.map(obj => ({ ...obj, soLuong: 0 })))
+      }).catch(err => {
+        console.log(err)
+      }).finally(() => {
+        console.log("done")
+      });
+  }, []);
+
+
+  useEffect(() => {
+    console.log("Data temp ", dataTemp)
+  }, [dataTemp]);
 
   const validationSchema = Yup.object().shape({
     nameRecv: Yup.string()
@@ -74,7 +71,7 @@ export const BuyTicket = () => {
               />
               <div>
                 <p>Price : {item.price}</p>
-                <InputNumber accept='number' value={dataTemp[index].soLuong} onChange={(event) => onChangeProductQuantity(index, event)} min={0} defaultValue={0} />
+                <InputNumber accept='number' value={dataTemp[index].soLuong} onChange={(event) => onChangeProductQuantity(index, event)} min={0} max={2} defaultValue={0} />
               </div>
             </List.Item>
           )}
@@ -180,11 +177,37 @@ export const BuyTicket = () => {
 
   const done = () => {
     const result = dataTemp.filter(item => item.soLuong > 0);
-    console.log("Result : " ,result)
-    console.log("Amount : " ,sum)
-    console.log("Name : " ,nameRcev)
-    console.log("Email : " ,emailRcev)
-    console.log("sdt : " ,sdtRcev)
+    console.log("Result : ", result)
+    console.log("Amount : ", sum)
+    console.log("Name : ", nameRcev)
+    console.log("Email : ", emailRcev)
+    console.log("sdt : ", sdtRcev)
+
+    const dataRequest = {
+      addressRecv: emailRcev,
+      amount: sum,
+      nameRecv: nameRcev,
+      payTicketRequestList: result,
+      phoneRecv: sdtRcev
+    }
+
+    const formData = new FormData();
+    formData.append("payRequest", JSON.stringify(dataRequest))
+    httpClient
+      .post(`/api/payment`, formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          }
+        }).then((response) => {
+          message.success('Đặt Vé Thành Công')
+        }).catch(err => {
+          message.error("Có Lỗi Gì Đó")
+          console.log(err)
+        }).finally(() => {
+          console.log("done")
+        });
+
   }
 
 

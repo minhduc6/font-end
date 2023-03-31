@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Button, List } from 'antd';
+import { Button, List, message } from 'antd';
 import { Select } from 'antd';
 import { Modal } from 'antd';
 import { httpClient } from '../../../service/httpClient';
@@ -14,7 +14,7 @@ export function InvoiceDetailModel({
     hideModal = () => null,
     refreshInvoice = () => null
 }) {
-  
+
 
     const refresh = () => window.location.reload(true)
     const [dataDetail, setDataDetail] = useState()
@@ -30,7 +30,7 @@ export function InvoiceDetailModel({
             .get(`/api/admin/invoice/${value.id}`, {
             }).then((response) => {
                 console.log(response)
-                setDataDetail(response.data)
+                setDataDetail(response.data.detailInvoices)
             }).catch(err => {
                 console.log(err)
             }).finally(() => {
@@ -58,6 +58,19 @@ export function InvoiceDetailModel({
     }
 
 
+    const sendEmail = () => {
+        httpClient
+            .get(`/api/admin/sendMail/${value.id}?email=${value.addressRecv}`).then((response) => {
+                
+            }).catch(err => {
+               
+            }).finally(() => {
+                alert("Gửi Email Thành CÔng")
+                hideModal()
+            });
+    }
+
+
 
     const footer = <></>
 
@@ -70,9 +83,8 @@ export function InvoiceDetailModel({
                     renderItem={(item) => (
                         <List.Item>
                             <List.Item.Meta
-                                title={<a>{item.typeTicket.name}</a>}
-                                description={'Description :' + item.typeTicket.description
-                                    + ' ||    Price : ' + item.typeTicket.price}
+                                title={<a>{item.nameTicket}</a>}
+                                description={'Price : ' + item.price}
                             />
                             <div>SL : {item.quantity}</div>
                         </List.Item>
@@ -100,7 +112,7 @@ export function InvoiceDetailModel({
 
                 <div style={{ marginTop: '20px' }}>
                     <p>Send Ticket Online :</p>
-                    <Button type="primary" size='large'>
+                    <Button onClick={sendEmail} type="primary" size='large'>
                         Send Mail
                     </Button>
                 </div>

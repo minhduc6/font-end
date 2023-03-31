@@ -1,6 +1,7 @@
-import { EditOutlined, DeleteOutlined ,InfoCircleOutlined } from '@ant-design/icons';
-import { Button ,Tag } from 'antd';
+import { EditOutlined, DeleteOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { Button, Tag } from 'antd';
 import { Avatar } from 'antd';
+import { Image } from 'antd';
 
 export const createUserColumns = (searchText, onClickEdit, showDeleteConfirm) => {
     // TODO
@@ -72,6 +73,66 @@ export const createCategoryColumns = (searchText, onClickEdit, showDeleteConfirm
 }
 
 
+export const createOrganizerColumns = (searchText, onClickEdit, showDeleteConfirm) => {
+    // TODO
+    return {
+        id: {
+            title: 'Id',
+            dataIndex: 'id',
+        },
+        image: {
+            title: 'Image',
+            dataIndex: '',
+            render: (rowdata) => <>
+                <Image
+                    width={200}
+                    src={rowdata.image}
+                />
+            </>
+        },
+        name: {
+            title: 'Name',
+            dataIndex: 'name',
+            filteredValue: [searchText],
+            onFilter: (value, record) => {
+                return String(record?.name).toLowerCase()?.includes(value?.toLowerCase());
+            }
+        },
+        email: {
+            title: 'Email',
+            dataIndex: 'email',
+        },
+        sdt: {
+            title: 'Phone',
+            dataIndex: 'sdt',
+        },
+        codeBusiness: {
+            title: 'Code Business',
+            dataIndex: 'codeBusiness',
+        },
+        city: {
+            title: 'City',
+            dataIndex: 'city',
+        },
+        district: {
+            title: 'District',
+            dataIndex: 'district',
+        },
+        ward : {
+            title: 'Ward',
+            dataIndex: 'ward',
+        },
+        action: {
+            title: 'Action',
+            dataIndex: '',
+            render: (rowdata) => <>
+                <Button type="ghost" onClick={() => onClickEdit(rowdata)} icon={<EditOutlined />} size='middle' />
+                <Button type="ghost" onClick={() => showDeleteConfirm(rowdata)} style={{ color: 'red' }} icon={<DeleteOutlined />} size='middle' />
+            </>
+        },
+    }
+}
+
 export const createInvoiceColumns = (onCickDetail) => {
     // TODO
     return {
@@ -83,7 +144,7 @@ export const createInvoiceColumns = (onCickDetail) => {
             title: 'Name',
             dataIndex: 'nameRecv',
         },
-        phone : {
+        phone: {
             title: 'Phone',
             dataIndex: 'phoneRecv',
         },
@@ -103,7 +164,7 @@ export const createInvoiceColumns = (onCickDetail) => {
             title: 'Status',
             dataIndex: '',
             render: (rowdata) => <>
-                <Tag  color={rowdata.status == 1 ? 'green' : 'red'} >
+                <Tag color={rowdata.status == 1 ? 'green' : 'red'} >
                     {rowdata.status == 1 ? 'DONE' : 'PROCESSING'}
                 </Tag>
             </>
@@ -112,7 +173,7 @@ export const createInvoiceColumns = (onCickDetail) => {
             title: 'Action',
             dataIndex: '',
             render: (rowdata) => <>
-                <Button type="ghost" onClick={() => onCickDetail(rowdata)}  icon={<InfoCircleOutlined />} size='middle' />
+                <Button type="ghost" onClick={() => onCickDetail(rowdata)} icon={<InfoCircleOutlined />} size='middle' />
             </>
         },
 

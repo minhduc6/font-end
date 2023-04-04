@@ -1,7 +1,8 @@
-import { EditOutlined, DeleteOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, InfoCircleOutlined,AreaChartOutlined  } from '@ant-design/icons';
 import { Button, Tag } from 'antd';
 import { Avatar } from 'antd';
 import { Image } from 'antd';
+import { QRCode } from 'antd';
 
 export const createUserColumns = (searchText, onClickEdit, showDeleteConfirm) => {
     // TODO
@@ -118,7 +119,7 @@ export const createOrganizerColumns = (searchText, onClickEdit, showDeleteConfir
             title: 'District',
             dataIndex: 'district',
         },
-        ward : {
+        ward: {
             title: 'Ward',
             dataIndex: 'ward',
         },
@@ -181,14 +182,39 @@ export const createInvoiceColumns = (onCickDetail) => {
 }
 
 
-export const createEventColumns = (searchText, onClickEdit, showDeleteConfirm) => {
+export const createMyTicketColumns = () => {
+    // TODO
+    return {
+        typeTicket: {
+            title: 'Type Ticket',
+            dataIndex: 'typeTicket',
+        },
+        serialCode: {
+            title: 'Serial Code',
+            dataIndex: 'serialCode',
+        },
+        qrCode: {
+            title: 'Qr Code',
+            dataIndex: '',
+            render: (rowdata) => <>
+                <QRCode value={rowdata.serialCode} />;
+            </>
+        },
+        price: {
+            title: 'Price',
+            dataIndex: 'price',
+        }
+    }
+}
+
+
+export const createEventColumns = (searchText, satisticalEvent, onClickEdit, showDeleteConfirm) => {
     // TODO
     return {
         id: {
             title: 'Id',
             dataIndex: 'id',
-        }
-        ,
+        },
         name: {
             title: 'Name',
             dataIndex: 'name',
@@ -217,6 +243,7 @@ export const createEventColumns = (searchText, onClickEdit, showDeleteConfirm) =
             title: 'Action',
             dataIndex: '',
             render: (rowdata) => <>
+                <Button type="ghost" onClick={() => satisticalEvent(rowdata)} icon={<AreaChartOutlined />} size='middle' />
                 <Button type="ghost" onClick={() => onClickEdit(rowdata)} icon={<EditOutlined />} size='middle' />
                 <Button type="ghost" onClick={() => showDeleteConfirm(rowdata)} style={{ color: 'red' }} icon={<DeleteOutlined />} size='middle' />
             </>

@@ -20,3 +20,18 @@ export const getEvent = (filter,setData,setLoading) => {
             setLoading(false)
         });
 };
+
+
+
+
+export const getMyInvoice = (setData,setLoading) => {
+    httpClient
+        .get("/api/myInvoice").then((response) => {
+             console.log(response)
+             setData(response.data)
+        }).catch(err => {
+            console.log(err)
+        }).finally(() => {
+            setLoading(false)
+        });
+};

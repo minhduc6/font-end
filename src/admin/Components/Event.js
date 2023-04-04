@@ -42,6 +42,12 @@ const Event = () => {
           });
     }
 
+    const satisticalEvent = (item) => {
+        navigate({
+            pathname: `/admin/event/statistical/${item.id}`,
+          });
+    }
+
 
     const showDeleteConfirm = (item) => {
         confirm({
@@ -70,7 +76,7 @@ const Event = () => {
         });
     };
 
-    const gridColumnsDict = createEventColumns(searchText, editEvent, showDeleteConfirm)
+    const gridColumnsDict = createEventColumns(searchText, satisticalEvent, editEvent, showDeleteConfirm)
     const eventColumns = [
         gridColumnsDict.id,
         gridColumnsDict.image,

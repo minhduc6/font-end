@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import PieChart from './PieChart';
 import { Typography } from 'antd';
-import { LineChart } from './LineChart';
+
 
 
 const { Title } = Typography;
@@ -118,7 +118,6 @@ const Dashboard = () => {
                 <div className="col-lg-4 col-md-6 col-sm-12 col-sm-offset-5">
                     <h4 className='title mt-3 mb-3 text-center text-secondary'>Data in Chart</h4>
                     <div className="mb-5" style={{ height: "300px", width: "400px" }}><PieChart /> </div>
-                    <div className="mb-5" style={{ height: "300px", width: "400px" }}><LineChart /> </div>
                 </div>
                    
             </div>

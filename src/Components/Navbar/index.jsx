@@ -31,7 +31,7 @@ function Navbar() {
     {
       key: '1',
       label: (
-        <a target="_blank" rel="noopener noreferrer" href="/profile">
+        <a  rel="noopener noreferrer" href="/profile">
           Profile
         </a>
       ),
@@ -39,7 +39,7 @@ function Navbar() {
     {
       key: '2',
       label: (
-        <a target="_blank" rel="noopener noreferrer" href="#">
+        <a  rel="noopener noreferrer" href="/my-invoice">
           Xem Đơn Hàng
         </a>
       ),
@@ -47,7 +47,15 @@ function Navbar() {
     {
       key: '3',
       label: (
-        <a  target="_blank" rel="noopener noreferrer" onClick={logout}>
+        <a  rel="noopener noreferrer" href="/orgainzer" >
+           Hồ Sơ Ban Tổ Chức
+        </a>
+      ),
+    },
+    {
+      key: '4',
+      label: (
+        <a   rel="noopener noreferrer" onClick={logout}>
           Đăng Xuất
         </a>
       ),
@@ -66,17 +74,9 @@ function Navbar() {
 
               </li>
               <li class="nav-item ">
-                <a class="nav-link" href="#">Home <span class="sr-only">Home</span></a>
+                <a class="nav-link" href="/">Home <span class="sr-only">Home</span></a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
+  
             </ul>
           </div>
           {isLoggin == true ? (<Dropdown menu={{ items }} placement="bottomLeft">

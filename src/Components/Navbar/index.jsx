@@ -55,6 +55,14 @@ function Navbar() {
     {
       key: '4',
       label: (
+        <a  rel="noopener noreferrer" href="/my-event" >
+           Sự Kiện Đã Tạo
+        </a>
+      ),
+    },
+    {
+      key: '5',
+      label: (
         <a   rel="noopener noreferrer" onClick={logout}>
           Đăng Xuất
         </a>

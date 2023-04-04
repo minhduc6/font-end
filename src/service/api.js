@@ -35,3 +35,17 @@ export const getMyInvoice = (setData,setLoading) => {
             setLoading(false)
         });
 };
+
+
+export const getEventByOrganizer = (setData,setLoading) => {
+    httpClient
+        .get("/api/eventByOrganizer").then((response) => {
+             console.log(response)
+             setData(response.data)
+        }).catch(err => {
+            console.log(err)
+        }).finally(() => {
+            setLoading(false)
+        });
+};
+

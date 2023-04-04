@@ -40,7 +40,7 @@ export const DetailInvoiceClient = () => {
 
     return (
         <>
-            <div style={{marginTop : '100px'}}>
+            <div className='container' style={{marginTop : '100px'}}>
                 <Title>My Ticket</Title>
                 <Table style={{ marginTop: '30px' }} loading={loading} columns={invoiceColumns} dataSource={data} />
             </div>

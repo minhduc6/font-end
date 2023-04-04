@@ -43,8 +43,8 @@ export const InvoiceClient = () => {
 
     return (
         <>
-            <div style={{marginTop : '50px'}}>
-                <Title>Invoice Management</Title>
+            <div className='container' style={{marginTop : '100px'}}>
+                <Title>Danh Sách Hoá Đơn Của Bạn</Title>
                 <Table style={{ marginTop: '30px' }} loading={loading} columns={invoiceColumns} dataSource={data} />
             </div>
         </>

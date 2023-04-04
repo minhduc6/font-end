@@ -24,6 +24,9 @@ import { Invoice } from "./Pages/Invoice";
 import { DetailInvoice } from "./Pages/DetailInvoice";
 import StatisticalContainer from "./admin/Container/StatisticalContainer";
 import { Organizers } from "./Pages/Organizer";
+import { EventByOrganizer } from "./Pages/EventByOrganizer";
+import { EventForm, EventFormByOrganizer } from "./Pages/EventForm";
+import Statistical from "./Pages/Statistical";
 
 function App() {
   const user = useSelector((state) => state.profile.user);
@@ -154,6 +157,18 @@ function App() {
     {
       path: "/my-invoice/:id",
       element: isLoggin == true ? <DetailInvoice />  :  <Navigate to='/login'  />
+    },
+    {
+      path: "/my-event",
+      element: isLoggin == true ? <EventByOrganizer /> :  <Navigate to='/login'  />
+    },
+    {
+      path: "/my-event/save",
+      element: isLoggin == true ? <EventFormByOrganizer /> :  <Navigate to='/login'  />
+    },
+    {
+      path: "/my-event/statistical/:id",
+      element: isLoggin == true ? <Statistical /> :  <Navigate to='/login'  />
     },
   ]);
   return (

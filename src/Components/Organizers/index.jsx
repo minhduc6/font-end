@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Button } from 'antd';
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { message } from 'antd';
 import { httpClient } from '../../service/httpClient';
+import { setCurrentUser  } from "../../Store/index";
 
 
 
 export function OrganizersForm() {
+    const dispatch = useDispatch();
     const refresh = () => window.location.reload(true)
     const ref = useRef(null);
     const refFile = useRef();
@@ -17,9 +19,15 @@ export function OrganizersForm() {
     const [formValues, setFormValues] = useState(null);
     const [id,setId] = useState(null)
 
-    
-
-
+    const getAccount = () => {
+        httpClient
+            .get("/api/user/me", {
+            })
+            .then((response) => {
+                dispatch(setCurrentUser(response.data))
+            }
+            );
+    };
 
 
     useEffect(() => {
@@ -99,9 +107,9 @@ export function OrganizersForm() {
                 )
                 .then((response) => {
                     message.success('Success')
+                    getAccount()
                     console.log("Res", response)
-                    refresh()
-                })
+                }).then(refresh())
                 .catch(() =>
                     alert("CC !")
                 )
@@ -116,6 +124,7 @@ export function OrganizersForm() {
                 )
                 .then((response) => {
                     message.success('Success')
+                    getAccount()
                     console.log("Res", response)
                 })
                 .catch(() =>

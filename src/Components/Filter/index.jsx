@@ -44,7 +44,7 @@ export default function Filter({ filter, onFilter }) {
   
     useEffect(() => {
         httpClient
-        .get("/api/admin/category", {
+        .get("/api/category", {
         }).then((response) => {
             const temp = []
             console.log(response.data)

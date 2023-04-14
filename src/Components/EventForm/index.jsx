@@ -132,7 +132,7 @@ const EventForm = () => {
                         message.success('Edit Success')
                         console.log("Res", response)
                         navigate({
-                            pathname: '/admin/event',
+                            pathname: '/my-event',
                         });
                     })
                     .catch(() =>
@@ -180,7 +180,6 @@ const EventForm = () => {
         setItem123({})
         setIsModalOpen(true)
         setStatusAction(0)
-
     }
 
     const editTypeTicket = (item) => {
@@ -208,11 +207,8 @@ const EventForm = () => {
         setImage(e.target.files[0])
     }
 
-
-
     return (
         <>
-
             <div style={{marginTop : '100px'}} className="container">
                 <Title>Save Event</Title>
                 <div className="row">
@@ -226,10 +222,9 @@ const EventForm = () => {
                             {({ errors, touched }) => {
                                 return (
                                     <Form>
-
                                         <div className="form-row">
                                             <div className="form-group col-12">
-                                                <label>Title :</label>
+                                                <label>Title : </label>
                                                 <Field name="name" type="text" className={'form-control' + (errors.name && touched.name ? ' is-invalid' : '')} />
                                                 <ErrorMessage name="name" component="div" className="invalid-feedback" />
                                             </div>

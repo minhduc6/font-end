@@ -27,6 +27,7 @@ import { Organizers } from "./Pages/Organizer";
 import { EventByOrganizer } from "./Pages/EventByOrganizer";
 import { EventForm, EventFormByOrganizer } from "./Pages/EventForm";
 import Statistical from "./Pages/Statistical";
+import { AboutPage } from "./Pages/About";
 
 function App() {
   const user = useSelector((state) => state.profile.user);
@@ -137,6 +138,10 @@ function App() {
     {
       path: "/",
       element: <Home />,
+    },
+    {
+      path: "/about",
+      element: <AboutPage />,
     },
     {
       path: "/event/detail/:id",

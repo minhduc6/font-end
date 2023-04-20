@@ -84,6 +84,9 @@ function Navbar() {
               <li class="nav-item ">
                 <a class="nav-link" href="/">Home <span class="sr-only">Home</span></a>
               </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/about">About <span class="sr-only">About</span></a>
+              </li>
   
             </ul>
           </div>

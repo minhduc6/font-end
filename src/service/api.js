@@ -22,8 +22,6 @@ export const getEvent = (filter,setData,setLoading) => {
 };
 
 
-
-
 export const getMyInvoice = (setData,setLoading) => {
     httpClient
         .get("/api/myInvoice").then((response) => {

@@ -13,14 +13,6 @@ const items1 = [
   {
     key: '1',
     label: 'Home'
-  },
-  {
-    key: '2',
-    label: 'Link'
-  },
-  {
-    key: '3',
-    label: 'About'
   }
 ]
 
@@ -50,6 +42,11 @@ const items2 = [
     key: `event`,
     icon: React.createElement(TagsOutlined),
     label: `Event`,
+  },
+  {
+    key: `blog`,
+    icon: React.createElement(TagsOutlined),
+    label: `Blog`,
   },
   {
     key: `invoice`,

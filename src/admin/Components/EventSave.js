@@ -24,7 +24,7 @@ const EventSave = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [statusAction, setStatusAction] = useState(-1)
     const [valueCategory, setValueCategory] = useState();
-    const [valueStatus, setValueStatus] = useState();
+    const [valueStatus, setValueStatus] = useState(1);
     const [item123, setItem123] = useState({})
     const [value, setValue] = useState('');
     const ref = useRef(null);

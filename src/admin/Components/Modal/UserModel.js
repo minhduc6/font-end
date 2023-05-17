@@ -125,14 +125,14 @@ export function DialogModalUser({
                                 <div className="form-row">
                                     <div className="form-group col-12">
                                         <label>Display Name</label>
-                                        <Field name="displayName" type="text" className={'form-control' + (errors.displayName && touched.displayName ? ' is-invalid' : '')} />
+                                        <Field readOnly name="displayName" type="text" className={'form-control' + (errors.displayName && touched.displayName ? ' is-invalid' : '')} />
                                         <ErrorMessage name="displayName" component="div" className="invalid-feedback" />
                                     </div>
                                 </div>
                                 <div className="form-row">
                                     <div className="form-group col-12">
                                         <label>Email</label>
-                                        <Field name="email" type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
+                                        <Field readOnly name="email" type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
                                         <ErrorMessage name="email" component="div" className="invalid-feedback" />
                                     </div>
                                     <div className="form-group col">

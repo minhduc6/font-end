@@ -1,12 +1,12 @@
 import Navbar from "../../Components/Navbar";
 import { Footer } from "../../Components/Footer";
-import { About } from "../../Components/About";
+import { DetailBlog } from "../../Components/DetailBlog";
 
-export const AboutPage = () => {
+export const BlogDetail = () => {
   return (
     <div>
-      <Navbar/>
-       <About/>
+      <Navbar />
+      <DetailBlog />
       <Footer/>
     </div>
   );

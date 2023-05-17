@@ -15,8 +15,11 @@ import { Button, Result } from 'antd';
 import UserContainer from "./admin/Container/UserContainer";
 import CategoryContainer from "./admin/Container/CategoryContainer";
 import EventContainer from "./admin/Container/EventContainer";
+import BlogContainer from "./admin/Container/BlogContainer";
 import EventSaveContainer from "./admin/Container/EventSaveContainer";
+import BlogSaveContainer from "./admin/Container/BlogSaveContainer";
 import { Detail } from "./Pages/Detail";
+import { BlogDetail } from "./Pages/BlogDetail";
 import { Ticket } from "./Pages/BuyTicket";
 import InvoiceContainer from "./admin/Container/InvoiceContainer";
 import OrganizerContainer from "./admin/Container/OrganizerContainer";
@@ -28,6 +31,7 @@ import { EventByOrganizer } from "./Pages/EventByOrganizer";
 import { EventForm, EventFormByOrganizer } from "./Pages/EventForm";
 import Statistical from "./Pages/Statistical";
 import { AboutPage } from "./Pages/About";
+import { BlogPage } from "./Pages/Blog";
 
 function App() {
   const user = useSelector((state) => state.profile.user);
@@ -97,6 +101,15 @@ function App() {
       />)
     },
     {
+      path: "/admin/blog",
+      element: roleAdmin == true ?  ( <BlogContainer/>) : (<Result
+        status="403"
+        title="403"
+        subTitle="Forbiden"
+        extra={<Button type="primary">Back Home</Button>}
+      />)
+    },
+    {
       path: "/admin/invoice",
       element: roleAdmin == true ?  ( <InvoiceContainer/>) : (<Result
         status="403"
@@ -108,6 +121,15 @@ function App() {
     {
       path: "/admin/event/save",
       element: roleAdmin == true ?  ( <EventSaveContainer/>) : (<Result
+        status="403"
+        title="403"
+        subTitle="Forbiden"
+        extra={<Button type="primary">Back Home</Button>}
+      />)
+    },
+    {
+      path: "/admin/blog/save",
+      element: roleAdmin == true ?  ( <BlogSaveContainer/>) : (<Result
         status="403"
         title="403"
         subTitle="Forbiden"
@@ -144,8 +166,16 @@ function App() {
       element: <AboutPage />,
     },
     {
+      path: "/blog",
+      element: <BlogPage />,
+    },
+    {
       path: "/event/detail/:id",
       element: <Detail />,
+    },
+    {
+      path: "/blog/detail/:id",
+      element: <BlogDetail />,
     },
     {
       path: "/orgainzer",

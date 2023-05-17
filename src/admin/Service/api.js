@@ -55,6 +55,20 @@ export const getEvent = (setData,setLoading) => {
 };
 
 
+export const getBlog = (setData,setLoading) => {
+    httpClient
+        .get("/api/admin/blog", {
+        }).then((response) => {
+             console.log(response)
+             setData(response.data)
+        }).catch(err => {
+            console.log(err)
+        }).finally(() => {
+            setLoading(false)
+        });
+};
+
+
 export const getInvoice = (filter,setData,setLoading) => {
     httpClient
         .get("/api/admin/filter/invoice", {

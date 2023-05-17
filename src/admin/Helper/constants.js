@@ -286,3 +286,37 @@ export const createTypeTicket = (onClickEdit, showDeleteConfirm) => {
         },
     }
 }
+
+
+
+export const createBlog = (searchText,onClickEdit, showDeleteConfirm) => {
+    // TODO
+    return {
+        id: {
+            title: 'Id',
+            dataIndex: 'id',
+        }
+        ,
+        name: {
+            title: 'Name',
+            dataIndex: 'name',
+            filteredValue: [searchText],
+            onFilter: (value, record) => {
+                return String(record?.name).toLowerCase()?.includes(value?.toLowerCase());
+            }
+        },
+        description: {
+            title: 'Description',
+            dataIndex: 'description',
+        },
+        action: {
+            title: 'Action',
+            dataIndex: '',
+            render: (rowdata) => <>
+                <Button type="ghost" onClick={() => onClickEdit(rowdata)} icon={<EditOutlined />} size='middle' />
+                <Button type="ghost" onClick={() => showDeleteConfirm(rowdata)} style={{ color: 'red' }} icon={<DeleteOutlined />} size='middle' />
+            </>
+        },
+    }
+}
+

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { InputNumber } from 'antd';
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
-import { Button, message, Steps, theme } from 'antd';
+import { Button, message, Steps, Tag } from 'antd';
 import { useParams } from "react-router-dom";
 import { httpClient } from '../../../src/service/httpClient';
 
@@ -69,10 +69,13 @@ export const BuyTicket = () => {
                 title={<a href="https://ant.design">{item.name}</a>}
                 description={item.description}
               />
+              
               <div>
+              {item.quantity == 0 ? <Tag color="red">Hết Vé</Tag> : ""}
                 <p>Price : {item.price}</p>
-                <InputNumber accept='number' value={dataTemp[index].soLuong} onChange={(event) => onChangeProductQuantity(index, event)} min={0} max={2} defaultValue={0} />
+                <InputNumber disabled={item.quantity == 0 ? true : false}  accept='number' value={dataTemp[index].soLuong} onChange={(event) => onChangeProductQuantity(index, event)} min={0} max={3} defaultValue={0} />
               </div>
+
             </List.Item>
           )}
         />
@@ -200,9 +203,9 @@ export const BuyTicket = () => {
             "Content-Type": "multipart/form-data",
           }
         }).then((response) => {
-          message.success('Đặt Vé Thành Công')
+          message.success('OK')
         }).catch(err => {
-          message.error("Có Lỗi Gì Đó")
+          message.error("Có Lỗi Gì Đó || Số Lượng Vé Đã Bán Hết Không Đủ")
           console.log(err)
         }).finally(() => {
           console.log("done")

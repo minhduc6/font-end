@@ -87,15 +87,16 @@ function Navbar() {
               <li class="nav-item ">
                 <a class="nav-link" href="/about">About <span class="sr-only">About</span></a>
               </li>
-  
+              <li class="nav-item ">
+                <a class="nav-link" href="/blog">Blog <span class="sr-only">Blog</span></a>
+              </li>
             </ul>
           </div>
           {isLoggin == true ? (<Dropdown menu={{ items }} placement="bottomLeft">
-            <Avatar src={<img src={user.imgUrl} alt="avatar" />} />
+            <Avatar src={<img src={user.imgUrl == null ? "https://xsgames.co/randomusers/avatar.php?g=pixel&key=2" : user.imgUrl} alt="avatar" />} />
           </Dropdown>) : (<>  <Button onClick={loggin} >
             Đăng Nhập
           </Button></>)}
-
         </div>
       </nav>
     </>

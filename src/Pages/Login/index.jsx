@@ -1,5 +1,13 @@
 import { GOOGLE_AUTH_URL, FACEBOOK_AUTH_URL, GITHUB_AUTH_URL, ACCESS_TOKEN } from '../../constants';
 import logo from '../../images/banner.jpg'
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Button } from 'antd';
+import { httpClient } from '../../service/httpClient';
+import { message } from 'antd';
+import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from 'react';
+import * as Yup from 'yup';
+
 
 export const Login = () => {
   // const [username, setUserName] = useState("");
@@ -44,36 +52,105 @@ export const Login = () => {
   //   e.preventDefault();
   //   Confirm();
   // };
+
+
+  const ref = useRef()
+  const [formValues, setFormValues] = useState(null);
+  const navigate = useNavigate();
+
+  const initialValues = {
+    email: '',
+    password: ''
+  };
+
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email('Email is invalid')
+      .required('Email is required'),
+    password: Yup.string()
+      .required('Password is required')
+  });
+
+
+  const someFuncton = () => {
+    if (Object.keys(ref.current.errors).length === 0) {
+      console.log(ref.current.values)
+      console.log("Valid")
+      httpClient
+        .post(`/auth/login`,
+          {
+            email: ref.current.values.email,
+            password: ref.current.values.password
+          }
+        )
+        .then((response) => {
+          message.success('Login Success')
+          localStorage.setItem("ACCESS_TOKEN", response.data.accessToken);
+          console.log("Res", response)
+          navigate({
+            pathname: '/profile',
+          });
+          
+        })
+        .catch(() =>
+          message.error('Kiểm tra lại email/password')
+        );
+
+    }
+  }
+
   return (
-    <div class="content-wrapper">
-    <section class="wrapper bg-light">
-      <div class="container">
-        <div  class="row"  style={{backgroundColor : '#202020',marginTop : '50px'}}>
-          <div class="col">
-            <div class="card shadow-lg">
-              <div class="row text-center" style={{backgroundColor : '#202020'}} >
-              <div class="col-lg-6 image-wrapper " >
-                 <img   class=""style={{width : '500px' , height : '500px' ,marginTop : '100px'}} src={logo} alt="" />
-                </div>
-                <div class="col-lg-6">
-                  <div class="p-10 p-md-11 p-lg-13">
-                    <h2 class="mb-3 text-start" style={{color : 'gray'}}>Login to Event</h2>
-                    <form class="text-start mb-3">
-                      <div class="form-floating mb-4">
-                        <input type="email" class="form-control" placeholder="Email" id="loginEmail"/>
-                        <label for="loginEmail">Email</label>
-                      </div>
-                      <div class="form-floating password-field mb-4">
-                        <input type="password" class="form-control" placeholder="Password" id="loginPassword"/>
-                        <span class="password-toggle"><i class="uil uil-eye"></i></span>
-                        <label for="loginPassword">Password</label>
-                      </div>
-                      <a class="btn btn-primary rounded-pill btn-login w-100 mb-2">Sign Up</a>
-                    </form>
-                    <p class="mb-0">Already have an account? <a href="signin2.html" class="hover">Sign in</a></p>
-                    <div class="divider-icon my-4">or</div>
-                    <nav class="nav social justify-content-center text-center">
-                      <a  href={GOOGLE_AUTH_URL} class="btn btn-circle btn-sm btn-google"><i class="uil uil-google"></i></a>
+    <div style={{ marginTop: '50px' }}>
+      <section>
+        <div class="container">
+          <div class="row" style={{ backgroundColor: '#202020' }}>
+            <div class="col">
+              <div class="card shadow-lg">
+                <div class="row" style={{ backgroundColor: '#202020' }} >
+                  <div class="col-lg-6 image-wrapper " >
+                    <img class="" style={{ width: '500px', height: '500px', marginTop: '100px' }} src={logo} alt="" />
+                  </div>
+                  <div class="col-lg-6">
+                    <h2 class="text-start" style={{ color: 'gray', marginTop: '15px', marginLeft: '20px' }}>Login to My Event</h2>
+
+                    <Formik
+                      innerRef={ref}
+                      initialValues={formValues || initialValues} enableReinitialize validationSchema={validationSchema}
+                      onSubmit={(values, actions) => {
+                        setTimeout(() => {
+                          alert(JSON.stringify(values, null, 2));
+                          actions.setSubmitting(false);
+                        }, 1000);
+                      }}>
+                      {({ errors, touched }) => {
+                        return (
+                          <Form>
+                            <div style={{ marginTop: '50px' }} className="container">
+                              <div style={{ marginTop: '20px' }} className="form-row">
+                                <div className="form-group col-8">
+                                  <label>Email : </label>
+                                  <Field name="email" type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
+                                  <ErrorMessage name="email" component="div" className="invalid-feedback" />
+                                </div>
+                              </div>
+                              <div style={{ marginTop: '20px' }} className="form-row">
+                                <div className="form-group col-8">
+                                  <label>Password : </label>
+                                  <Field name="password" type="password" className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
+                                  <ErrorMessage name="password" component="div" className="invalid-feedback" />
+                                </div>
+                              </div>
+                            </div>
+                            <Button style={{ marginTop: '10px', marginLeft: '20px' }} onClick={someFuncton} >Login</Button>
+                          </Form>
+                        );
+                      }}
+                    </Formik>
+                    <p class="mb-0">Already have an account? <a href="signin2.html" class="hover">Login</a></p>
+                    <div class="divider-icon my-4"></div>
+                    <nav style={{ marginTop: '50px' }} class="nav social justify-content-center text-center">
+                      <a href={GOOGLE_AUTH_URL} class="btn btn-circle btn-sm btn-google"><i class="uil uil-google"></i></a>
                       <a href="#" class="btn btn-circle btn-sm btn-facebook-f"><i class="uil uil-facebook-f"></i></a>
                       <a href="#" class="btn btn-circle btn-sm btn-twitter"><i class="uil uil-twitter"></i></a>
                     </nav>
@@ -83,8 +160,7 @@ export const Login = () => {
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
     </div>
   );
 };

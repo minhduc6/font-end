@@ -100,8 +100,8 @@ function Statistical() {
             <div className='container' style={{ marginTop: '150px' }}>
                 <h2>Doanh Thu</h2>
                 <Line title='Doanh Thu' className='container' options={options} data={data} />
-                <h3>Doanh Thu : {doanhThu()} VND </h3>
-                <h3>Sau Khi Bán Nhận Được (Thu 5% bán hộ) {doanhThu() * 0.95} VND</h3>
+                <h3>Doanh Thu : {doanhThu()?.toLocaleString('vi', {style : 'currency', currency : 'VND'})} </h3>
+                <h3>Sau Khi Bán Nhận Được (Thu 5% bán hộ) {(doanhThu() * 0.95)?.toLocaleString('vi', {style : 'currency', currency : 'VND'})}</h3>
             </div>
             <Footer />
         </div>

@@ -155,7 +155,10 @@ export const createInvoiceColumns = (onCickDetail) => {
         },
         amount: {
             title: 'Amount',
-            dataIndex: 'amount',
+            dataIndex: '',
+            render: (rowdata) => <>
+                <p>{rowdata.amount.toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
+            </>
         },
         time: {
             title: 'Times',
@@ -202,7 +205,10 @@ export const createMyTicketColumns = () => {
         },
         price: {
             title: 'Price',
-            dataIndex: 'price',
+            dataIndex: '',
+            render: (rowdata) => <>
+            <p>{rowdata.price.toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
+        </>
         }
     }
 }
@@ -270,7 +276,10 @@ export const createTypeTicket = (onClickEdit, showDeleteConfirm) => {
         },
         price: {
             title: 'Price',
-            dataIndex: 'price',
+            dataIndex: '',
+            render: (rowdata) => <>
+            <p>{rowdata.price.toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
+        </>
         },
         quantity: {
             title: 'Quantity',

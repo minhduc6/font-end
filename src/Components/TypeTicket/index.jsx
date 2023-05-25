@@ -1,11 +1,13 @@
-import { Avatar, List } from 'antd';
+import { List } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { InputNumber } from 'antd';
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { Button, message, Steps, Tag } from 'antd';
 import { useParams } from "react-router-dom";
+import { Image } from 'antd';
 import { httpClient } from '../../../src/service/httpClient';
+import  img  from '../../assets/img/qrbank.jpg'
 
 
 export const BuyTicket = () => {
@@ -72,7 +74,7 @@ export const BuyTicket = () => {
               
               <div>
               {item.quantity == 0 ? <Tag color="red">Hết Vé</Tag> : ""}
-                <p>Price : {item.price}</p>
+                <p>Price :  {item.price.toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
                 <InputNumber disabled={item.quantity == 0 ? true : false}  accept='number' value={dataTemp[index].soLuong} onChange={(event) => onChangeProductQuantity(index, event)} min={0} max={3} defaultValue={0} />
               </div>
 
@@ -127,7 +129,13 @@ export const BuyTicket = () => {
     },
     {
       title: 'Last',
-      content: 'Last-content',
+      content: (
+        <Image
+        style={{marginLeft : '800px'}}
+        width={200}
+        src={img}
+      />
+      ),
     },
   ];
   const next = () => {

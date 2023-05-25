@@ -84,14 +84,14 @@ export function InvoiceDetailModel({
                         <List.Item>
                             <List.Item.Meta
                                 title={<a>{item.nameTicket}</a>}
-                                description={'Price : ' + item.price}
+                                description={'Price : ' + item.price.toLocaleString('vi', {style : 'currency', currency : 'VND'})}
                             />
                             <div>SL : {item.quantity}</div>
                         </List.Item>
                     )}
                 />
                 <div style={{ marginTop: '30px' }}>
-                    Amout : {value.amount}
+                    Amount : {value.amount?.toLocaleString('vi', {style : 'currency', currency : 'VND'})}
                 </div>
                 <div style={{ marginTop: '20px' }}>
                     <p>Status :</p>
